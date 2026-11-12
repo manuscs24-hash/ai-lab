@@ -1,0 +1,29 @@
+from itertools import product
+
+def entails(kb, query, symbols):
+    print("\nTRUTH TABLE ENUMERATION")
+    print("-" * 40)
+    print(f"{'P':<6}{'Q':<6}{'P->Q':<8}{'Query Q'}")
+    print("-" * 40)
+
+    for p, q in product([True, False], repeat=2):
+        model = {'P': p, 'Q': q}
+        kb_value = kb(model)
+        query_value = query(model)
+
+        print(f"{'T' if p else 'F':<6}"
+              f"{'T' if q else 'F':<6}"
+              f"{'T' if kb_value else 'F':<8}"
+              f"{'T' if query_value else 'F'}")
+
+        if kb_value and not query_value:
+            print("\nKB does not entail Q")
+            return False
+
+    print("\nKB entails Q")
+    return True
+
+kb = lambda m: (not m['P']) or m['Q']
+query = lambda m: m['Q']
+
+entails(kb, query, ['P', 'Q'])
